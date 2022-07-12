@@ -46,27 +46,92 @@ class _HomePageState extends State<HomePage> {
 
   @override
   String? dropDownValue = '1';
+  String? dropdownValue1 = 'Select value 1';
+  String? dropdownValue2 = 'A';
 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('stock app', style: TextStyle(fontSize: 30))),
       body: Container(
+        padding: EdgeInsets.all(10),
         child: Column(
           children: [
             DropdownButton<String>(
-                value: dropDownValue,
-                items: planScheduleList.map(
-                  (e) {
-                    return DropdownMenuItem(
-                        value: PlanSchedule.fromJson(e as Map<String, dynamic>).id, child: Text(PlanSchedule.fromJson(e as Map<String, dynamic>).value ?? ''));
-                  },
-                ).toList(),
-                onChanged: (String? value) {
-                  setState(() {
+              value: dropdownValue1,
+              icon: const Icon(Icons.arrow_downward),
+              elevation: 16,
+              style: const TextStyle(color: Colors.deepPurple),
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
+              onChanged: (String? newValue) {
+                setState(() {
+                  dropdownValue1 = newValue!;
+                });
+              },
+              items: <String>['Select value 1', 'One', 'Two', 'Free', 'Four']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
 
-                    dropDownValue = value;
-                  });
-                }),
+            dropdownValue1 != 'Select value 1'
+                ? DropdownButton<String>(
+                    value: dropdownValue2,
+                    icon: const Icon(Icons.arrow_downward),
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue2 = newValue!;
+                      });
+                    },
+                    items: <String>['Select value 2', 'A', 'B', 'C', 'D']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  )
+                : Container(),
+            Row(
+              children: [
+                Text('Plan schedule'),
+                SizedBox(width: 20),
+                DropdownButton<String>(
+                    hint: Text(
+                      'plan schedule',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    value: dropDownValue,
+                    items: planScheduleList.map(
+                      (e) {
+                        return DropdownMenuItem(
+                            value:
+                                PlanSchedule.fromJson(e as Map<String, dynamic>)
+                                    .id,
+                            child: Text(
+                                PlanSchedule.fromJson(e as Map<String, dynamic>)
+                                        .value ??
+                                    ''));
+                      },
+                    ).toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        dropDownValue = value;
+                      });
+                    }),
+              ],
+            ),
             // DropdownButton(value: dropDownValue, items: planScheduleList.map<DropdownMenuItem>((String value) {
             //   return DropdownMenuItem<String>(
             //     value: value,
@@ -77,11 +142,27 @@ class _HomePageState extends State<HomePage> {
             //     dropDownValue = value;
             //   });
             // },),
-            TextButton(
-                onPressed: () {
-                  print(dropDownValue);
-                },
-                child: Text('test'))
+            dropdownValue1 == 'Select value 1'
+                ? TextButton(
+                    onPressed: () {},
+                    child: Text('test'),
+                  )
+                : Container(),
+            Table(
+              children: [
+                TableRow(
+                  children: [
+                    TableCell(
+                      child: Container(
+                        height: 100,
+                        width: 100,
+                        child: Text('test table'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ],
         ),
       ),
