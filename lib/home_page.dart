@@ -15,171 +15,215 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List planScheduleList = [];
 
-  void initState() {
-    callAPI();
-  }
+  void initState() {}
 
-  void callAPI() async {
-    Uri url = Uri.parse('http://192.168.3.94/api/v1/stock.php');
-    http.Response response = await http.get(
-      url,
-      headers: {
-        'user': '1',
-        'menu': '54',
-        'module': '16',
-        'function': 'get_dropdown_fillter_plan',
-      },
-    );
-    var res = jsonDecode(response.body);
-    print(res);
-    setState(() {
-      planScheduleList = res[0]['plan_schedule_type_id'];
-    });
-  }
-
-  void mapObject() {
-    print(planScheduleList);
-    PlanSchedule plan1 = PlanSchedule.fromJson(planScheduleList[0]);
-    print(plan1.id);
-    print(plan1.value);
-  }
-
-  @override
-  String? dropDownValue = '1';
-  String? dropdownValue1 = 'Select value 1';
-  String? dropdownValue2 = 'A';
+  String? dateValue;
+  String? timeValue;
+  String? tableValue;
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('stock app', style: TextStyle(fontSize: 30))),
+      appBar:
+          AppBar(title: const Text('Mock UI', style: TextStyle(fontSize: 30))),
       body: Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.symmetric(vertical: 40, horizontal: 30),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            DropdownButton<String>(
-              value: dropdownValue1,
-              icon: const Icon(Icons.arrow_downward),
-              elevation: 16,
-              style: const TextStyle(color: Colors.deepPurple),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String? newValue) {
-                setState(() {
-                  dropdownValue1 = newValue!;
-                });
-              },
-              items: <String>['Select value 1', 'One', 'Two', 'Free', 'Four']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-
-            dropdownValue1 != 'Select value 1'
-                ? DropdownButton<String>(
-                    value: dropdownValue2,
-                    icon: const Icon(Icons.arrow_downward),
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.deepPurple),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue2 = newValue!;
-                      });
-                    },
-                    items: <String>['Select value 2', 'A', 'B', 'C', 'D']
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: DropdownButtonFormField(
+                    value: dateValue,
+                    items: <String>['1', '2', '3', '4']
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
                       );
                     }).toList(),
-                  )
-                : Container(),
-            Row(
-              children: [
-                Text('Plan schedule'),
-                SizedBox(width: 20),
-                DropdownButton<String>(
-                    hint: Text(
-                      'plan schedule',
-                      style: TextStyle(color: Colors.grey),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'วันที่',
+                      labelStyle: TextStyle(fontSize: 25),
                     ),
-                    value: dropDownValue,
-                    items: planScheduleList.map(
-                      (e) {
-                        return DropdownMenuItem(
-                            value:
-                                PlanSchedule.fromJson(e as Map<String, dynamic>)
-                                    .id,
-                            child: Text(
-                                PlanSchedule.fromJson(e as Map<String, dynamic>)
-                                        .value ??
-                                    ''));
-                      },
-                    ).toList(),
                     onChanged: (String? value) {
                       setState(() {
-                        dropDownValue = value;
+                        dateValue = value;
                       });
-                    }),
+                    },
+                  ),
+                ),
+                SizedBox(width: 20),
+                Expanded(
+                  flex: 2,
+                  child: DropdownButtonFormField(
+                    value: timeValue,
+                    items: <String>['13:00', '14:00', '15:00', '16:00']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'เวลาทํางาน',
+                      labelStyle: TextStyle(fontSize: 25),
+                    ),
+                    onChanged: dateValue == null
+                        ? null
+                        : (String? value) {
+                            setState(() {
+                              timeValue = value;
+                            });
+                          },
+                    disabledHint: Text(
+                      'โปรดเลือกวันที่',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 20),
+                Expanded(
+                  flex: 2,
+                  child: DropdownButtonFormField(
+                    value: tableValue,
+                    items: <String>[
+                      'โต๊ะ 1',
+                      'โต๊ะ 2',
+                      'โต๊ะ 3',
+                      'โต๊ะ 4',
+                      'โต๊ะ 5'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'โต๊ะ',
+                      labelStyle: TextStyle(fontSize: 25),
+                    ),
+                    onChanged: timeValue == null
+                        ? null
+                        : (String? value) {
+                            setState(() {
+                              tableValue = value;
+                            });
+                          },
+                    disabledHint: Text(
+                      'โปรดเลือกเวลาทํางาน',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 30),
+                Expanded(
+                  flex: 1,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      primary: Colors.white,
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                    ),
+                    child: Text(
+                      'ค้นหา',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    onPressed: () {},
+                  ),
+                ),
               ],
             ),
-            // DropdownButton(value: dropDownValue, items: planScheduleList.map<DropdownMenuItem>((String value) {
-            //   return DropdownMenuItem<String>(
-            //     value: value,
-            //     child: Text('test'),
-            //   );
-            // }).toList(), onChanged: (String? value) {
-            //   setState(() {
-            //     dropDownValue = value;
-            //   });
-            // },),
-            dropdownValue1 == 'Select value 1'
-                ? TextButton(
-                    onPressed: () {},
-                    child: Text('test'),
-                  )
-                : Container(),
+            SizedBox(height: 30),
             Table(
+              border: TableBorder.all(width: 1, color: Colors.grey),
               children: [
                 TableRow(
                   children: [
-                    TableCell(
-                      child: Container(
-                        height: 100,
-                        width: 100,
-                        child: Text('test table'),
-                      ),
-                    ),
+                    tableHeader('header'),
+                    tableHeader('header'),
+                    tableHeader('header'),
+                    tableHeader('header'),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    tableItem('data'),
+                    tableItem('data'),
+                    tableItem('data'),
+                    tableItem('data'),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    tableItem('data'),
+                    tableItem('data'),
+                    tableItem('data'),
+                    tableItem('data'),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    tableItem('data'),
+                    tableItem('data'),
+                    tableItem('data'),
+                    tableItem('data'),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    tableItem('data'),
+                    tableItem('data'),
+                    tableItem('data'),
+                    tableItem('data'),
                   ],
                 ),
               ],
             ),
+            SizedBox(height: 40),
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.blue,
+                primary: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              ),
+              child: Text(
+                'ยืนยัน',
+                style: TextStyle(fontSize: 20),
+              ),
+              onPressed: () {},
+            )
           ],
         ),
       ),
     );
   }
-}
 
-class PlanSchedule {
-  String? id;
-  String? value;
+  Widget tableHeader(String text) {
+    return TableCell(
+        child: Center(
+            child: Padding(
+      padding: EdgeInsets.all(12),
+      child: Text(
+        text,
+        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+      ),
+    )));
+  }
 
-  PlanSchedule({this.id, this.value});
-
-  factory PlanSchedule.fromJson(Map<String, dynamic> json) {
-    return PlanSchedule(
-      id: json['id'],
-      value: json['value1'],
-    );
+  Widget tableItem(String text) {
+    return TableCell(
+        child: Center(
+            child: Padding(
+      padding: EdgeInsets.all(12),
+      child: Text(
+        text,
+        style: TextStyle(fontSize: 12),
+      ),
+    )));
   }
 }
