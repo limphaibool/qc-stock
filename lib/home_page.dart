@@ -248,9 +248,7 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.symmetric(horizontal: 12),
                 child: TextField(
                   keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    input = value;
-                  },
+                  onChanged: (value) {},
                 ))));
   }
 
